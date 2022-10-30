@@ -1,12 +1,12 @@
 {
-	"id": "{B052AEAB-2687-02EB-DF40-74191E242A0B}",
-	"name": "ModuleTemplate Device",
+	"id": "{A0D064E8-44E3-206A-9B5E-87F12B666EA7}",
+	"name": "Fiat uconnect",
 	"type": 3,
 	"vendor": "",
 	"aliases": [],
 	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],
-	"prefix": "ModuleTemplate",
-	"url": "https://github.com/demel42/ModuleTemplate/blob/master/README.md"
+	"prefix": "Fiat",
+	"url": "https://github.com/demel42/IPSymconFiatUconnect/blob/master/README.md"
 }
