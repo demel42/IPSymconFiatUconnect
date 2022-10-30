@@ -6,7 +6,7 @@ require_once __DIR__ . '/../libs/common.php';
 require_once __DIR__ . '/../libs/local.php';
 require_once __DIR__ . '/../libs/AwsV4.php';
 
-class FiatUconnectDevice extends IPSModule
+class FiatUconnect extends IPSModule
 {
     use FiatUconnect\StubsCommonLib;
     use FiatUconnectLocalLib;
