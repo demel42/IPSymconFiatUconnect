@@ -1,6 +1,15 @@
 {
 	"translations": {
 		"de": {
+			"__variableprofile__": "Fiat.PluginStatus",
+			"disconnected": "nicht verbunden",
+			"connected": "verbunden",
+
+			"__variableprofile__": "Fiat.ChargingStatus",
+			"Charge complete": "beendet",
+			"Not charging": "inaktiv",
+			"Charging": "aktiv",
+
 			"__end__": ""
 		}
 	}
