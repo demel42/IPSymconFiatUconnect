@@ -94,6 +94,8 @@ Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und m
 - Nachrichten:
 
 ### Quellen
+- [ioBroker.Fiat](https://github.com/TA2k/ioBroker.fiat.git)
+- [FiatChamp](https://github.com/wubbl0rz/FiatChamp.git)
 
 ## 7. Versions-Historie
 
