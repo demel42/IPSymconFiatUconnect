@@ -1,0 +1,25 @@
+{
+	"id": "{6408D88D-E7FD-3DA5-DAC5-25984E025451}",
+	"caption": "Reset update interval to default",
+	"form": [],
+	"action": "Fiat_OverwriteUpdateInterval($_IPS['TARGET'], null);",
+	"restrictions": {
+		"objectType": [
+			1
+		],
+		"moduleID": [
+			"{A0D064E8-44E3-206A-9B5E-87F12B666EA7}"
+		],
+		"includeEnvironments": [
+			"TestCommands",
+			"Default"
+		]
+	},
+	"priority": 10,
+	"category": "target",
+	"locale": {
+		"de": {
+			"Reset update interval to default": "Aktualisierungs-Intervall auf Standardwært zurücksetzen"
+		}
+	}
+}

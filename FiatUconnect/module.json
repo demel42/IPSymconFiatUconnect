@@ -2,7 +2,7 @@
 	"id": "{A0D064E8-44E3-206A-9B5E-87F12B666EA7}",
 	"name": "Fiat uconnect",
 	"type": 3,
-	"vendor": "",
+	"vendor": "Fiat",
 	"aliases": [],
 	"parentRequirements": [],
 	"childRequirements": [],

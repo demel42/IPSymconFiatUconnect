@@ -13,7 +13,7 @@ class FiatUconnect extends IPSModule
 
     private static $uconnect_endpoint = 'https://myuconnect.fiat.com';
 
-    private static $sessionExpiration = (24 * 60 * 60);
+    private static $sessionExpiration = (12 * 60 * 60);
 
     private static $login_api_key = '3_mOx_J2dRgjXYCdyhchv3b5lhi54eBcdCTX4BI8MORqmZCoQWhA0mV2PTlptLGUQI';
     private static $login_endpoint = 'https://loginmyuconnect.fiat.com';
@@ -396,8 +396,7 @@ class FiatUconnect extends IPSModule
         if ($cerrno) {
             $statuscode = self::$IS_SERVERERROR;
             $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
-        }
-        if ($statuscode) {
+        } else {
             if ($httpcode == 401) {
                 $statuscode = self::$IS_UNAUTHORIZED;
                 $err = 'got http-code ' . $httpcode . ' (unauthorized)';
@@ -500,8 +499,7 @@ class FiatUconnect extends IPSModule
         if ($cerrno) {
             $statuscode = self::$IS_SERVERERROR;
             $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
-        }
-        if ($statuscode) {
+        } else {
             if ($httpcode == 401) {
                 $statuscode = self::$IS_UNAUTHORIZED;
                 $err = 'got http-code ' . $httpcode . ' (unauthorized)';
@@ -968,11 +966,12 @@ class FiatUconnect extends IPSModule
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
 
         $statuscode = 0;
+        $err = '';
         if ($cerrno) {
             $statuscode = self::$IS_SERVERERROR;
             $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
         }
-        if ($statuscode) {
+        if ($statuscode == 0) {
             if ($httpcode == 401) {
                 $statuscode = self::$IS_UNAUTHORIZED;
                 $err = 'got http-code ' . $httpcode . ' (unauthorized)';
@@ -987,6 +986,9 @@ class FiatUconnect extends IPSModule
                 $err = 'got http-code ' . $httpcode . '(' . $this->HttpCode2Text($httpcode) . ')';
             }
         }
+
+        $this->SendDebug(__FUNCTION__, '*** statuscode=' . $statuscode . ', err=' . $err, 0);
+
         if ($statuscode == 0) {
             $header_size = $curl_info['header_size'];
             $head = substr($response, 0, $header_size);
@@ -997,6 +999,13 @@ class FiatUconnect extends IPSModule
             if ($jbody == false) {
                 $statuscode = self::$IS_INVALIDDATA;
                 $err = 'invalid/malformed data';
+            }
+        }
+        if ($statuscode == 0) {
+            if (isset($jbody['name']) && $jbody['name'] == 'EXPIRED_TOKEN') {
+                $this->WriteAttributeString('ApiSettings', '');
+                $statuscode = self::$IS_UNAUTHORIZED;
+                $err = 'token expired';
             }
         }
         if ($statuscode) {

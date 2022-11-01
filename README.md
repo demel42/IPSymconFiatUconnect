@@ -16,9 +16,13 @@
 
 ## 1. Funktionsumfang
 
+Anbindung and das Uconnect-Portal von _Fiat Chrysler Automobiles_ (FCA) zum Auslesen von Daten der Fiat-Modelle. 
+Das Modul beschränkt sich auf das Auslesen der Daten, Kommandos zur Steuerung werden nicht unterstützt; bisher nur mit einem Fiat 500E getestet
+
 ## 2. Voraussetzungen
 
-- IP-Symcon ab Version 6.0
+- IP-Symcon ab Version 6.0<br>
+- Fiat-Modell mit eingerichtetem Zugang zum Uconnect-Portal
 
 ## 3. Installation
 
@@ -29,9 +33,14 @@ Alternativ kann das Modul über [Module Control](https://www.symcon.de/service/d
 
 ### b. Einrichtung in IPS
 
+In IP-Symcon die Funktion _Instanz hinzufügen_ auswählen und als Hersteller _Fiat_ angeben.
+Benutzerkennung und Passwort des Uconnect-Portal sowie die Fahrgestellnummer angeben.
+
 ## 4. Funktionsreferenz
 
-alle Funktionen sind über _RequestAction_ der jew. Variablen ansteuerbar
+`Fiat_OverwriteUpdateInterval(integer $InstanceID, int $Minutes)`<br>
+ändert das Aktualisierumgsintervall; eine Angabe von **null** setzt auf den in der Konfiguration vorgegebene Wert zurück.
+Es gibt hierzu auch zwei Aktionen (Setzen und Zurücksetzen).
 
 ## 5. Konfiguration
 
@@ -43,19 +52,38 @@ alle Funktionen sind über _RequestAction_ der jew. Variablen ansteuerbar
 | :------------------------ | :------  | :----------- | :----------- |
 | Instanz deaktivieren      | boolean  | false        | Instanz temporär deaktivieren |
 |                           |          |              | |
+| Benutzer                  | string   |              | Benutzerkennung (EMail) des Uconnect-Portals |
+| Passwort                  | string   |              | Passwort des Uconnect-Portals |
+|                           |          |              | |
+| VIN                       | string   |              | Fahrgestellnummer |
+|                           |          |              | |
+| Aktualisierungsintervall  | integer  | 5            | Intervall in Minuten |
 
 #### Aktionen
 
 | Bezeichnung                | Beschreibung |
 | :------------------------- | :----------- |
+| Aktualisiere Status        | Daten abrufen |
+| erneut anmelden            | Login erzwingen |
 
 ### Variablenprofile
 
 Es werden folgende Variablenprofile angelegt:
-* Boolean<br>
 * Integer<br>
+Fiat.Mileage,
+Fiat.PlugInStatus,
+
 * Float<br>
+Fiat.Altitude,
+Fiat.BatteryCapacity,
+Fiat.Location,
+Fiat.StateOfCharge,
+Fiat.Voltage,
+
 * String<br>
+Fiat.ChargingStatus,
+
+Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und muss gemäß ergänzt werden. Bitte über zusätzliche Einträge den Autor informieren, damit es nachgepflegt werden kann.
 
 ## 6. Anhang
 
@@ -69,5 +97,5 @@ Es werden folgende Variablenprofile angelegt:
 
 ## 7. Versions-Historie
 
-- 0.9 @ 31.10.2022 10:11
+- 1.0 @ 01.11.2022 09:28
   - Initiale Version

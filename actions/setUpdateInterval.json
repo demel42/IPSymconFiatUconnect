@@ -1,0 +1,36 @@
+{
+	"id": "{E7D85F0C-C78B-68CB-0528-6C60973C7030}",
+	"caption": "Set update interval",
+	"form": [
+		{
+			"type": "NumberSpinner",
+			"digits": 0,
+			"minimum": 0,
+			"suffix": "Minutes",
+			"name": "INTERVAL",
+			"caption": "Interval"
+		}
+	],
+	"action": "Fiat_OverwriteUpdateInterval($_IPS['TARGET'], $_IPS['INTERVAL']);",
+	"restrictions": {
+		"objectType": [
+			1
+		],
+		"moduleID": [
+			"{A0D064E8-44E3-206A-9B5E-87F12B666EA7}"
+		],
+		"includeEnvironments": [
+			"TestCommands",
+			"Default"
+		]
+	},
+	"priority": 10,
+	"category": "target",
+	"locale": {
+		"de": {
+			"Set update interval": "Aktualisierungs-Intervall setzen",
+			"Interval": "Intervall",
+			"Minutes": "Minuten"
+		}
+	}
+}
