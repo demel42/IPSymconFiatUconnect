@@ -51,8 +51,9 @@ class FiatUconnect extends IPSModule
 
         $this->RegisterPropertyInteger('update_interval', 5);
 
-        $this->RegisterAttributeString('UpdateInfo', '');
         $this->RegisterAttributeString('external_update_interval', '');
+        $this->RegisterAttributeString('UpdateInfo', '');
+        $this->RegisterAttributeString('ApiCallStats', json_encode([]));
 
         $this->InstallVarProfiles(false);
 
@@ -220,12 +221,13 @@ class FiatUconnect extends IPSModule
             'caption'   => 'Expert area',
             'expanded ' => false,
             'items'     => [
+                $this->GetInstallVarProfilesFormItem(),
                 [
                     'type'    => 'Button',
-                    'label'   => 'Relogin',
-                    'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "Relogin", "");',
+                    'label'   => 'Clear token',
+                    'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "ClearToken", "");',
                 ],
-                $this->GetInstallVarProfilesFormItem(),
+                $this->GetApiCallStatsFormItem(),
             ],
         ];
 
@@ -263,8 +265,8 @@ class FiatUconnect extends IPSModule
             case 'UpdateStatus':
                 $this->UpdateStatus();
                 break;
-            case 'Relogin':
-                $this->Relogin();
+            case 'ClearToken':
+                $this->ClearToken();
                 break;
             default:
                 $r = false;
@@ -335,7 +337,7 @@ class FiatUconnect extends IPSModule
         return preg_match('|^http[s]*://([^/]*)|', $url, $r) ? $r[1] : '';
     }
 
-    private function Relogin()
+    private function ClearToken()
     {
         $this->WriteAttributeString('ApiSettings', '');
         $this->Login();
@@ -393,6 +395,7 @@ class FiatUconnect extends IPSModule
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
 
         $statuscode = 0;
+        $err = '';
         if ($cerrno) {
             $statuscode = self::$IS_SERVERERROR;
             $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
@@ -422,6 +425,9 @@ class FiatUconnect extends IPSModule
             $cookies = explode(';', implode(';', $results[1]));
             $this->SendDebug(__FUNCTION__, ' => cookies=' . print_r($cookies, true), 0);
         }
+
+        $this->ApiCallsCollect($url, $err, $statuscode);
+
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
@@ -496,6 +502,7 @@ class FiatUconnect extends IPSModule
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
 
         $statuscode = 0;
+        $err = '';
         if ($cerrno) {
             $statuscode = self::$IS_SERVERERROR;
             $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
@@ -544,6 +551,9 @@ class FiatUconnect extends IPSModule
                 $err = '"userInfo.UID" missing';
             }
         }
+
+        $this->ApiCallsCollect($url, $err, $statuscode);
+
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
@@ -611,6 +621,7 @@ class FiatUconnect extends IPSModule
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
 
         $statuscode = 0;
+        $err = '';
         if ($cerrno) {
             $statuscode = self::$IS_SERVERERROR;
             $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
@@ -648,6 +659,9 @@ class FiatUconnect extends IPSModule
                 $err = '"id_token" missing';
             }
         }
+
+        $this->ApiCallsCollect($url, $err, $statuscode);
+
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
@@ -713,6 +727,7 @@ class FiatUconnect extends IPSModule
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
 
         $statuscode = 0;
+        $err = '';
         if ($cerrno) {
             $statuscode = self::$IS_SERVERERROR;
             $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
@@ -756,6 +771,9 @@ class FiatUconnect extends IPSModule
                 $err = '"IdentityId" missing';
             }
         }
+
+        $this->ApiCallsCollect($url, $err, $statuscode);
+
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
@@ -823,6 +841,7 @@ class FiatUconnect extends IPSModule
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
 
         $statuscode = 0;
+        $err = '';
         if ($cerrno) {
             $statuscode = self::$IS_SERVERERROR;
             $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
@@ -860,6 +879,9 @@ class FiatUconnect extends IPSModule
                 $err = '"Credentials" missing';
             }
         }
+
+        $this->ApiCallsCollect($url, $err, $statuscode);
+
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
@@ -1008,6 +1030,9 @@ class FiatUconnect extends IPSModule
                 $err = 'token expired';
             }
         }
+
+        $this->ApiCallsCollect($url, $err, $statuscode);
+
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
