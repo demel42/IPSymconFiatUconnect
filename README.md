@@ -100,7 +100,7 @@ Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und m
 ## 7. Versions-Historie
 
 - 1.2 @ 18.01.2023 14:02
-  - Neu: automatisches Relogin, wenn HTTP-Error 403(unauthotized)
+  - Neu: automatisches Relogin, wenn HTTP-Error 403(unauthorized)
 
 - 1.1 @ 16.12.2022 09:43
   - Neu: Führen einer Statistik der API-Calls im IO-Modul, Anzeige als Popup im Experten-Bereich
