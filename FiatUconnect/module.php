@@ -13,7 +13,7 @@ class FiatUconnect extends IPSModule
 
     private static $uconnect_endpoint = 'https://myuconnect.fiat.com';
 
-    private static $sessionExpiration = (12 * 60 * 60);
+    private static $sessionExpiration = 60 * 60;
 
     private static $login_api_key = '3_mOx_J2dRgjXYCdyhchv3b5lhi54eBcdCTX4BI8MORqmZCoQWhA0mV2PTlptLGUQI';
     private static $login_endpoint = 'https://loginmyuconnect.fiat.com';
@@ -1025,10 +1025,12 @@ class FiatUconnect extends IPSModule
         }
         if ($statuscode == 0) {
             if (isset($jbody['name']) && $jbody['name'] == 'EXPIRED_TOKEN') {
-                $this->WriteAttributeString('ApiSettings', '');
                 $statuscode = self::$IS_UNAUTHORIZED;
                 $err = 'token expired';
             }
+        }
+        if ($statuscode == self::$IS_UNAUTHORIZED) {
+            $this->WriteAttributeString('ApiSettings', '');
         }
 
         $this->ApiCallsCollect($url, $err, $statuscode);
