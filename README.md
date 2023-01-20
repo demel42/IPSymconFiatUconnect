@@ -99,6 +99,9 @@ Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und m
 
 ## 7. Versions-Historie
 
+- 1.3 @ 20.01.2023 17:08
+  - Fix: Zeitstempel sind in der API in Millisekunden
+
 - 1.2 @ 18.01.2023 14:02
   - Neu: automatisches Relogin, wenn HTTP-Error 403(unauthorized)
 

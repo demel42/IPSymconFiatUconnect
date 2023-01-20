@@ -1103,7 +1103,9 @@ class FiatUconnect extends IPSModule
             }
 
             $tstamp = $this->GetArrayElem($jdata, 'vehicleInfo.timestamp', '');
-            $this->SaveValue('LastUpdateFromVehicle', intval($tstamp), $isChanged);
+            if ($tstamp != '') {
+                $this->SaveValue('LastUpdateFromVehicle', intval($tstamp / 1000), $isChanged);
+            }
 
             $val = $this->GetArrayElem($jdata, 'evInfo.battery.distanceToEmpty.value', '');
             if ($val != '') {
@@ -1151,7 +1153,7 @@ class FiatUconnect extends IPSModule
 
             $val = $this->GetArrayElem($jdata, 'timeStamp', '');
             if ($val != '') {
-                $this->SaveValue('LastPositionUpdate', intval($val), $isChanged);
+                $this->SaveValue('LastPositionUpdate', intval($val / 1000), $isChanged);
             }
         }
 
