@@ -99,6 +99,9 @@ Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und m
 
 ## 7. Versions-Historie
 
+- 1.4 @ 22.01.2023 15:56
+  - ??
+
 - 1.3 @ 20.01.2023 17:08
   - Fix: Zeitstempel sind in der API in Millisekunden
 

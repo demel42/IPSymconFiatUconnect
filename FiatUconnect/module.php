@@ -1157,8 +1157,11 @@ class FiatUconnect extends IPSModule
             }
         }
 
-        // $path = '/v1/accounts/' . $user_id . '/vehicles/' . $vin . '/svla/status';
-        // $path = '/v1/accounts/' . $user_id . '/vehicles/' . $vin . '/vhr';
+        $path = '/v1/accounts/' . $user_id . '/vehicles/' . $vin . '/svla/status';
+        $jdata = $this->CallApi($path);
+
+        $path = '/v1/accounts/' . $user_id . '/vehicles/' . $vin . '/vhr';
+        $jdata = $this->CallApi($path);
 
         $this->SendDebug(__FUNCTION__, $this->PrintTimer('UpdateStatus'), 0);
     }
