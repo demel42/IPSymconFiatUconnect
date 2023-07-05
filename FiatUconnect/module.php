@@ -219,7 +219,7 @@ class FiatUconnect extends IPSModule
         $formActions[] = [
             'type'      => 'ExpansionPanel',
             'caption'   => 'Expert area',
-            'expanded ' => false,
+            'expanded' => false,
             'items'     => [
                 $this->GetInstallVarProfilesFormItem(),
                 [
@@ -239,27 +239,20 @@ class FiatUconnect extends IPSModule
 
     private function SetUpdateInterval(int $min = null)
     {
-        $this->SendDebug(__FUNCTION__, 'min=' . $min, 0);
         if (is_null($min)) {
             $min = $this->ReadAttributeString('external_update_interval');
-            $this->SendDebug(__FUNCTION__, 'attribute "external_update_interval" is "' . $min . '"', 0);
             if ($min == '') {
                 $min = $this->ReadPropertyInteger('update_interval');
-                $this->SendDebug(__FUNCTION__, 'property "update_interval" is "' . $min . '"', 0);
             }
         }
-        $this->SendDebug(__FUNCTION__, 'min=' . $min, 0);
         $this->MaintainTimer('UpdateStatus', $min * 60 * 1000);
     }
 
     public function OverwriteUpdateInterval(int $min = null)
     {
-        $this->SendDebug(__FUNCTION__, 'min=' . $min, 0);
         if (is_null($min)) {
-            $this->SendDebug(__FUNCTION__, 'clear attribute "external_update_interval"', 0);
             $this->WriteAttributeString('external_update_interval', '');
         } else {
-            $this->SendDebug(__FUNCTION__, 'set attribute "external_update_interval" to "' . $min . '"', 0);
             $this->WriteAttributeString('external_update_interval', $min);
         }
         $this->SetUpdateInterval($min);

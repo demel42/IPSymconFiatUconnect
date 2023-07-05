@@ -99,8 +99,10 @@ Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und m
 
 ## 7. Versions-Historie
 
-- 1.4 @ 25.01.2023 17:28
-  - ??
+- 1.4 @ 05.07.2023 11:56
+  - Vorbereitung auf IPS 7 / PHP 8.2
+  - update submodule CommonStubs
+    - Absicherung bei Zugriff auf Objekte und Inhalte
 
 - 1.3 @ 20.01.2023 17:08
   - Fix: Zeitstempel sind in der API in Millisekunden
