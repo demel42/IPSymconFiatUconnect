@@ -1041,6 +1041,8 @@ class FiatUconnect extends IPSModule
             return false;
         }
 
+        $this->MaintainStatus(IS_ACTIVE);
+
         $this->SendDebug(__FUNCTION__, 'data=' . print_r($jbody, true), 0);
         return $jbody;
     }
@@ -1156,12 +1158,6 @@ class FiatUconnect extends IPSModule
                 $this->SaveValue('LastPositionUpdate', intval($val / 1000), $isChanged);
             }
         }
-
-        $path = '/v1/accounts/' . $user_id . '/vehicles/' . $vin . '/svla/status';
-        $jdata = $this->CallApi($path);
-
-        $path = '/v1/accounts/' . $user_id . '/vehicles/' . $vin . '/vhr';
-        $jdata = $this->CallApi($path);
 
         $this->SendDebug(__FUNCTION__, $this->PrintTimer('UpdateStatus'), 0);
     }

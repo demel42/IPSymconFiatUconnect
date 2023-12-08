@@ -99,6 +99,10 @@ Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und m
 
 ## 7. Versions-Historie
 
+- 1.5 @ 08.12.2023 13:49
+  - Fix: API-Calls entfernt, die nicht ausgewertet wurden und Fehler verursacht haben
+  - Fix: automatisches Rücksetzen des Instanz-Status bei geglückten API-Call
+
 - 1.4 @ 05.07.2023 11:56
   - Vorbereitung auf IPS 7 / PHP 8.2
   - update submodule CommonStubs
