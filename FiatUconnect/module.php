@@ -51,9 +51,10 @@ class FiatUconnect extends IPSModule
 
         $this->RegisterPropertyInteger('update_interval', 5);
 
+        $this->RegisterPropertyBoolean('collectApiCallStats', true);
+
         $this->RegisterAttributeString('external_update_interval', '');
         $this->RegisterAttributeString('UpdateInfo', '');
-        $this->RegisterAttributeString('ApiCallStats', json_encode([]));
 
         $this->InstallVarProfiles(false);
 
@@ -194,6 +195,12 @@ class FiatUconnect extends IPSModule
             'caption' => 'Update interval',
         ];
 
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'collectApiCallStats',
+            'caption' => 'Collect data of API calls'
+        ];
+
         return $formElements;
     }
 
@@ -216,19 +223,25 @@ class FiatUconnect extends IPSModule
             'onClick' => 'IPS_RequestAction($id, "UpdateStatus", "");',
         ];
 
+        $items = [
+            $this->GetInstallVarProfilesFormItem(),
+            [
+                'type'    => 'Button',
+                'caption' => 'Clear token',
+                'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "ClearToken", "");',
+            ],
+        ];
+
+        $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
+        if ($collectApiCallStats) {
+            $items[] = $this->GetApiCallStatsFormItem();
+        }
+
         $formActions[] = [
             'type'      => 'ExpansionPanel',
             'caption'   => 'Expert area',
-            'expanded' => false,
-            'items'     => [
-                $this->GetInstallVarProfilesFormItem(),
-                [
-                    'type'    => 'Button',
-                    'label'   => 'Clear token',
-                    'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "ClearToken", "");',
-                ],
-                $this->GetApiCallStatsFormItem(),
-            ],
+            'expanded'  => false,
+            'items'     => $items,
         ];
 
         $formActions[] = $this->GetInformationFormAction();
@@ -426,7 +439,10 @@ class FiatUconnect extends IPSModule
             $this->SendDebug(__FUNCTION__, ' => cookies=' . print_r($cookies, true), 0);
         }
 
-        $this->ApiCallsCollect($url, $err, $statuscode);
+        $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
+        if ($collectApiCallStats) {
+            $this->ApiCallCollect($url, $err, $statuscode);
+        }
 
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
@@ -552,7 +568,10 @@ class FiatUconnect extends IPSModule
             }
         }
 
-        $this->ApiCallsCollect($url, $err, $statuscode);
+        $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
+        if ($collectApiCallStats) {
+            $this->ApiCallCollect($url, $err, $statuscode);
+        }
 
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
@@ -660,7 +679,10 @@ class FiatUconnect extends IPSModule
             }
         }
 
-        $this->ApiCallsCollect($url, $err, $statuscode);
+        $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
+        if ($collectApiCallStats) {
+            $this->ApiCallCollect($url, $err, $statuscode);
+        }
 
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
@@ -772,7 +794,10 @@ class FiatUconnect extends IPSModule
             }
         }
 
-        $this->ApiCallsCollect($url, $err, $statuscode);
+        $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
+        if ($collectApiCallStats) {
+            $this->ApiCallCollect($url, $err, $statuscode);
+        }
 
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
@@ -880,7 +905,10 @@ class FiatUconnect extends IPSModule
             }
         }
 
-        $this->ApiCallsCollect($url, $err, $statuscode);
+        $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
+        if ($collectApiCallStats) {
+            $this->ApiCallCollect($url, $err, $statuscode);
+        }
 
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
@@ -1033,7 +1061,10 @@ class FiatUconnect extends IPSModule
             $this->WriteAttributeString('ApiSettings', '');
         }
 
-        $this->ApiCallsCollect($url, $err, $statuscode);
+        $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
+        if ($collectApiCallStats) {
+            $this->ApiCallCollect($url, $err, $statuscode);
+        }
 
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);

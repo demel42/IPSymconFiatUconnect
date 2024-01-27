@@ -99,6 +99,11 @@ Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und m
 
 ## 7. Versions-Historie
 
+- 1.6 @ 27.01.2024 11:27
+  - Neu: Schalter, um Daten zu API-Aufrufen zu sammeln
+    Die API-Aufruf-Daten stehen nun in einem Medienobjekt zur Verfügung
+  - update submodule CommonStubs
+
 - 1.5 @ 08.12.2023 13:49
   - Fix: API-Calls entfernt, die nicht ausgewertet wurden und Fehler verursacht haben
   - Fix: automatisches Rücksetzen des Instanz-Status bei geglückten API-Call

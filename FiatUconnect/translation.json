@@ -17,6 +17,8 @@
             "Update interval": "Aktualisierungsintervall",
             "minutes": "Minuten",
 
+			"Collect data of API calls": "Daten von API-Aufrufen sammeln",
+
 			"__variables__": "",
 			"Mileage": "Kilometerstand",
 			"Remaining range": "Verbleibende Reichweite",
