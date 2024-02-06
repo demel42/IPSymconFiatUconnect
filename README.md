@@ -99,7 +99,8 @@ Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und m
 
 ## 7. Versions-Historie
 
-- 1.6 @ 27.01.2024 11:27
+- 1.6 @ 29.01.2024 10:21
+  - Änderung: Medien-Objekte haben zur eindeutigen Identifizierung jetzt ebenfalls ein Ident
   - Neu: Schalter, um Daten zu API-Aufrufen zu sammeln
     Die API-Aufruf-Daten stehen nun in einem Medienobjekt zur Verfügung
   - update submodule CommonStubs

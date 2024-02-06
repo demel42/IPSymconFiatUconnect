@@ -33,6 +33,9 @@
 			"Last position update": "Letzte Positionsaktualisierung",
 			"Last status update": "Letzte Statusaktualisierung",
 
+			"__media__": "",
+			"API call statistics": "API-Aufruf-Statistkdaten",
+
 			"__actions__": "",
 			"Update status": "Aktualisiere Status",
 			"Clear token": "Token löschen",

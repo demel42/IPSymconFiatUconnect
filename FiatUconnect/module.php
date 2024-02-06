@@ -137,6 +137,10 @@ class FiatUconnect extends IPSModule
         $this->MaintainVariable('CurrentAltitude', $this->Translate('Current altitude'), VARIABLETYPE_FLOAT, 'Fiat.Altitude', $vpos++, true);
         $this->MaintainVariable('LastPositionUpdate', $this->Translate('Last position update'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, true);
 
+        $vpos = 1000;
+        $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
+        $this->MaintainMedia('ApiCallStats', $this->Translate('API call statistics'), MEDIATYPE_DOCUMENT, '.txt', false, $vpos++, $collectApiCallStats);
+
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
             $this->MaintainTimer('UpdateStatus', 0);
