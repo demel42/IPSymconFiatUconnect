@@ -10,6 +10,7 @@ trait FiatUconnectLocalLib
     public static $IS_HTTPERROR = IS_EBASE + 13;
     public static $IS_INVALIDDATA = IS_EBASE + 14;
     public static $IS_APIERROR = IS_EBASE + 15;
+    public static $IS_INVALIDPIN = IS_EBASE + 16;
 
     private function GetFormStatus()
     {
@@ -21,6 +22,7 @@ trait FiatUconnectLocalLib
         $formStatus[] = ['code' => self::$IS_HTTPERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (http error)'];
         $formStatus[] = ['code' => self::$IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
         $formStatus[] = ['code' => self::$IS_APIERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (api error)'];
+        $formStatus[] = ['code' => self::$IS_INVALIDPIN, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid pin)'];
 
         return $formStatus;
     }

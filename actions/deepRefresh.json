@@ -1,0 +1,25 @@
+{
+	"id": "{6D24AC3A-8677-2E6F-A3FE-9743C233863F}",
+	"caption": "Execute a \"Deep refresh\"",
+	"form": [],
+	"action": "Fiat_DeepRefresh($_IPS['TARGET']);",
+	"restrictions": {
+		"objectType": [
+			1
+		],
+		"moduleID": [
+			"{A0D064E8-44E3-206A-9B5E-87F12B666EA7}"
+		],
+		"includeEnvironments": [
+			"TestCommands",
+			"Default"
+		]
+	},
+	"priority": 10,
+	"category": "target",
+	"locale": {
+		"de": {
+			"Execute a \"Deep refresh\"": "AUslösen eines \"Deep refresh\""
+		}
+	}
+}

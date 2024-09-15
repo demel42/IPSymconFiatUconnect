@@ -17,6 +17,7 @@
 			"Instance is inactive (http error)": "Instanz ist inaktiv (HTTP-Fehler)",
 			"Instance is inactive (invalid data)": "Instanz ist inaktiv (ungültige Daten)",
 			"Instance is inactive (api error)": "Instanz ist inaktiv (API-Fehler)",
+			"Instance is inactive (invalid pin)": "Instanz ist inaktiv (ungültige PIN)",
 
 			"__end__": ""
 		}

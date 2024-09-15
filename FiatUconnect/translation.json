@@ -10,12 +10,13 @@
 			"Disable instance": "Instanz deaktivieren",
 
 			"Account data": "Zugangsdaten",
-            "User": "Benutzer",
-            "Password": "Passwort",
-            "VIN": "Fahrgestellnummer",
+			"User": "Benutzer",
+			"Password": "Passwort",
+			"PIN": "PIN",
+			"VIN": "Fahrgestellnummer",
 
-            "Update interval": "Aktualisierungsintervall",
-            "minutes": "Minuten",
+			"Update interval": "Aktualisierungsintervall",
+			"minutes": "Minuten",
 
 			"Collect data of API calls": "Daten von API-Aufrufen sammeln",
 
@@ -26,6 +27,7 @@
 			"Charging status": "Status des Ladevorgangs",
 			"Plugin status": "Status der Ladekabels",
 			"Battery voltage": "Batteriespannung",
+			"Last status update from the EV system": "Letzte Status-Aktualisierung vom EV-System",
 			"Service in": "Service in",
 			"Current latitude": "Aktueller Breitengrad",
 			"Current longitude": "Aktueller Längengrad",
@@ -38,6 +40,7 @@
 
 			"__actions__": "",
 			"Update status": "Aktualisiere Status",
+			"Deep refresh": "Deep refresh",
 			"Clear token": "Token löschen",
 
 			"__end__": ""

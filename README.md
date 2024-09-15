@@ -42,6 +42,9 @@ Benutzerkennung und Passwort des Uconnect-Portal sowie die Fahrgestellnummer ang
 ändert das Aktualisierumgsintervall; eine Angabe von **null** setzt auf den in der Konfiguration vorgegebene Wert zurück.
 Es gibt hierzu auch zwei Aktionen (Setzen und Zurücksetzen).
 
+`Fiat_DeepRefresh(integer $InstanceID)`<br>
+manuelle Auslösung des sogenannten "Deep Refresh" (erzwungene Aktualisierung der Daten des EV-Systems).
+
 ## 5. Konfiguration
 
 ### Fiat uconnect
@@ -98,6 +101,10 @@ Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und m
 - [FiatChamp](https://github.com/wubbl0rz/FiatChamp.git)
 
 ## 7. Versions-Historie
+
+- 1.7 @ 15.09.2024 11:46
+  - Änderung: manuelle Auslösung des sogenannten "Deep Refresh" (erzwungene Aktualisierung der Daten des EV-Systems)
+  - update submodule CommonStubs
 
 - 1.6 @ 29.01.2024 10:21
   - Änderung: Medien-Objekte haben zur eindeutigen Identifizierung jetzt ebenfalls ein Ident

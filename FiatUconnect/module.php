@@ -30,13 +30,19 @@ class FiatUconnect extends IPSModule
 
     private static $user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.2 Mobile/15E148 Safari/604.1';
 
-    private $ModuleDir;
+    private $SemaphoreID;
 
     public function __construct(string $InstanceID)
     {
         parent::__construct($InstanceID);
 
-        $this->ModuleDir = __DIR__;
+        $this->CommonConstruct(__DIR__);
+        $this->SemaphoreID = __CLASS__ . '_' . $InstanceID;
+    }
+
+    public function __destruct()
+    {
+        $this->CommonDestruct();
     }
 
     public function Create()
@@ -47,6 +53,7 @@ class FiatUconnect extends IPSModule
 
         $this->RegisterPropertyString('user', '');
         $this->RegisterPropertyString('password', '');
+        $this->RegisterPropertyString('pin', '');
         $this->RegisterPropertyString('vin', '');
 
         $this->RegisterPropertyInteger('update_interval', 5);
@@ -54,11 +61,12 @@ class FiatUconnect extends IPSModule
         $this->RegisterPropertyBoolean('collectApiCallStats', true);
 
         $this->RegisterAttributeString('external_update_interval', '');
+        $this->RegisterAttributeString('ApiSettings', '');
+
         $this->RegisterAttributeString('UpdateInfo', '');
+        $this->RegisterAttributeString('ModuleStats', json_encode([]));
 
         $this->InstallVarProfiles(false);
-
-        $this->RegisterAttributeString('ApiSettings', '');
 
         $this->SetBuffer('Summary', '');
 
@@ -124,6 +132,7 @@ class FiatUconnect extends IPSModule
         $this->MaintainVariable('ChargingStatus', $this->Translate('Charging status'), VARIABLETYPE_STRING, 'Fiat.ChargingStatus', $vpos++, true);
         $this->MaintainVariable('PlugInStatus', $this->Translate('Plugin status'), VARIABLETYPE_INTEGER, 'Fiat.PlugInStatus', $vpos++, true);
         $this->MaintainVariable('BatteryVoltage', $this->Translate('Battery voltage'), VARIABLETYPE_FLOAT, 'Fiat.Voltage', $vpos++, true);
+        $this->MaintainVariable('LastEvStatusUpdate', $this->Translate('Last status update from the EV system'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, true);
 
         $vpos = 50;
         $this->MaintainVariable('DistanceToService', $this->Translate('Service in'), VARIABLETYPE_INTEGER, 'Fiat.Mileage', $vpos++, true);
@@ -183,6 +192,11 @@ class FiatUconnect extends IPSModule
                     'caption' => 'Password'
                 ],
                 [
+                    'name'    => 'pin',
+                    'type'    => 'PasswordTextBox',
+                    'caption' => 'PIN'
+                ],
+                [
                     'name'    => 'vin',
                     'type'    => 'ValidationTextBox',
                     'caption' => 'VIN'
@@ -225,6 +239,12 @@ class FiatUconnect extends IPSModule
             'type'    => 'Button',
             'caption' => 'Update status',
             'onClick' => 'IPS_RequestAction($id, "UpdateStatus", "");',
+        ];
+
+        $formActions[] = [
+            'type'    => 'Button',
+            'caption' => 'Deep refresh',
+            'onClick' => $this->GetModulePrefix() . '_DeepRefresh($id);',
         ];
 
         $items = [
@@ -281,6 +301,9 @@ class FiatUconnect extends IPSModule
         switch ($ident) {
             case 'UpdateStatus':
                 $this->UpdateStatus();
+                break;
+            case 'DeepRefresh':
+                $this->DeepRefresh();
                 break;
             case 'ClearToken':
                 $this->ClearToken();
@@ -449,6 +472,7 @@ class FiatUconnect extends IPSModule
         }
 
         if ($statuscode) {
+            $this->SendDebug(__FUNCTION__, ' => response=' . $response, 0);
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
             return false;
@@ -578,6 +602,7 @@ class FiatUconnect extends IPSModule
         }
 
         if ($statuscode) {
+            $this->SendDebug(__FUNCTION__, ' => response=' . $response, 0);
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
             return false;
@@ -689,6 +714,7 @@ class FiatUconnect extends IPSModule
         }
 
         if ($statuscode) {
+            $this->SendDebug(__FUNCTION__, ' => response=' . $response, 0);
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
             return false;
@@ -804,6 +830,7 @@ class FiatUconnect extends IPSModule
         }
 
         if ($statuscode) {
+            $this->SendDebug(__FUNCTION__, ' => response=' . $response, 0);
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
             return false;
@@ -909,19 +936,22 @@ class FiatUconnect extends IPSModule
             }
         }
 
+        if ($statuscode == 0) {
+            $credentials = $jbody['Credentials'];
+            $this->SendDebug(__FUNCTION__, 'credentials=' . print_r($credentials, true), 0);
+        }
+
         $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
         if ($collectApiCallStats) {
             $this->ApiCallCollect($url, $err, $statuscode);
         }
 
         if ($statuscode) {
+            $this->SendDebug(__FUNCTION__, ' => response=' . $response, 0);
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
             return false;
         }
-        $credentials = $jbody['Credentials'];
-
-        $this->SendDebug(__FUNCTION__, 'credentials=' . print_r($credentials, true), 0);
 
         $this->MaintainStatus(IS_ACTIVE);
 
@@ -941,6 +971,7 @@ class FiatUconnect extends IPSModule
         $data = $this->ReadAttributeString('ApiSettings');
         if ($data != false) {
             $jdata = json_decode($data, true);
+            $this->SendDebug(__FUNCTION__, 'settings=' . print_r($jdata, true), 0);
             $expiration = isset($jdata['expiration']) ? $jdata['expiration'] : 0;
             if ($expiration > time()) {
                 $this->SendDebug(__FUNCTION__, 'old credentials, valid until ' . date('d.m.y H:i:s', $expiration), 0);
@@ -1041,8 +1072,6 @@ class FiatUconnect extends IPSModule
             }
         }
 
-        $this->SendDebug(__FUNCTION__, '*** statuscode=' . $statuscode . ', err=' . $err, 0);
-
         if ($statuscode == 0) {
             $header_size = $curl_info['header_size'];
             $head = substr($response, 0, $header_size);
@@ -1071,6 +1100,7 @@ class FiatUconnect extends IPSModule
         }
 
         if ($statuscode) {
+            $this->SendDebug(__FUNCTION__, ' => response=' . $response, 0);
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
             return false;
@@ -1139,9 +1169,9 @@ class FiatUconnect extends IPSModule
                 $this->SaveValue('DistanceToService', intval($val), $isChanged);
             }
 
-            $tstamp = $this->GetArrayElem($jdata, 'vehicleInfo.timestamp', '');
-            if ($tstamp != '') {
-                $this->SaveValue('LastUpdateFromVehicle', intval($tstamp / 1000), $isChanged);
+            $val = $this->GetArrayElem($jdata, 'vehicleInfo.timestamp', '');
+            if ($val != '') {
+                $this->SaveValue('LastUpdateFromVehicle', intval($val / 1000), $isChanged);
             }
 
             $val = $this->GetArrayElem($jdata, 'evInfo.battery.distanceToEmpty.value', '');
@@ -1168,6 +1198,11 @@ class FiatUconnect extends IPSModule
 
             $val = $this->GetArrayElem($jdata, 'evInfo.battery.timeToFullyChargeL3', 0);
             $this->SendDebug(__FUNCTION__, 'battery.timeToFullyChargeL3=' . $val, 0);
+
+            $val = $this->GetArrayElem($jdata, 'evInfo.timestamp', '');
+            if ($val != '') {
+                $this->SaveValue('LastEvStatusUpdate', intval($val / 1000), $isChanged);
+            }
         }
 
         $path = '/v1/accounts/' . $user_id . '/vehicles/' . $vin . '/location/lastknown';
@@ -1194,6 +1229,300 @@ class FiatUconnect extends IPSModule
             }
         }
 
-        $this->SendDebug(__FUNCTION__, $this->PrintTimer('UpdateStatus'), 0);
+        $this->SetUpdateInterval();
+    }
+
+    public function DeepRefresh()
+    {
+        if ($this->CheckStatus() == self::$STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            return;
+        }
+
+        $settings = $this->GetApiSettings();
+        if ($settings == false) {
+            $this->MaintainStatus(self::$IS_UNAUTHORIZED);
+            return;
+        }
+
+        $user_id = $settings['user_id'];
+        $vin = $this->ReadPropertyString('vin');
+        $pin = $this->ReadPropertyString('pin');
+
+        $credentials = $settings['credentials'];
+
+        $this->SendDebug(__FUNCTION__, '*** pin-auth', 0);
+
+        $path = '/v1/accounts/' . $user_id . '/ignite/pin/authenticate';
+        $url = $this->build_url(self::$auth_api_endpoint . $path, []);
+
+        $postfields = [
+            'pin' => base64_encode(mb_convert_encoding($pin, 'ISO-8859-1', 'UTF-8')),
+        ];
+        $postdata = json_encode($postfields);
+
+        $headerfields = [
+            'accept'               => 'application/json, text/plain, */*',
+            'accept-language'      => 'de-de',
+            'content-encoding'     => 'amz-1.0',
+            'content-type'         => 'application/json',
+            'host'                 => $this->extract_host(self::$auth_api_endpoint),
+            'x-clientapp-version'  => '1.0',
+            'clientrequestid'      => $this->random_string(16),
+            'x-api-key'            => self::$auth_api_key,
+            'x-originator-type'    => 'web',
+            'locale'               => 'de_de',
+            'x-clientapp-name'     => 'CWP',
+            'x-amz-security-token' => $credentials['SessionToken'],
+        ];
+        ksort($headerfields);
+
+        $awsv4 = new awsv4($credentials['AccessKeyId'], $credentials['SecretKey']);
+        $awsv4->setRegionName('eu-west-1');
+        $awsv4->setServiceName('execute-api');
+        $awsv4->setPath($path);
+        $awsv4->setPayload($postdata);
+        $awsv4->setRequestMethod('POST');
+        foreach ($headerfields as $key => $value) {
+            $awsv4->addHeader($key, $value);
+        }
+        $aws_headers = $awsv4->getHeaders();
+        $header = $this->build_header($aws_headers);
+
+        $curl_opts = [
+            CURLOPT_URL            => $url,
+            CURLOPT_HTTPHEADER     => $header,
+            CURLOPT_CUSTOMREQUEST  => 'POST',
+            CURLOPT_POSTFIELDS     => $postdata,
+            CURLOPT_COOKIEFILE     => '',
+            CURLOPT_HEADER         => true,
+            CURLINFO_HEADER_OUT    => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 30,
+        ];
+
+        $this->SendDebug(__FUNCTION__, 'http-POST, url=' . $url, 0);
+        $this->SendDebug(__FUNCTION__, '... header=' . print_r($header, true), 0);
+        $this->SendDebug(__FUNCTION__, '... postfields=' . print_r($postfields, true), 0);
+
+        $time_start = microtime(true);
+
+        $ch = curl_init();
+        curl_setopt_array($ch, $curl_opts);
+        $response = curl_exec($ch);
+        $cerrno = curl_errno($ch);
+        $cerror = $cerrno ? curl_error($ch) : '';
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_info = curl_getinfo($ch);
+        curl_close($ch);
+
+        $duration = round(microtime(true) - $time_start, 2);
+        $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
+
+        $statuscode = 0;
+        $err = '';
+        if ($cerrno) {
+            $statuscode = self::$IS_SERVERERROR;
+            $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
+        }
+        if ($statuscode) {
+            if ($httpcode == 401) {
+                $statuscode = self::$IS_UNAUTHORIZED;
+                $err = 'got http-code ' . $httpcode . ' (unauthorized)';
+            } elseif ($httpcode == 403) {
+                $statuscode = self::$IS_UNAUTHORIZED;
+                $err = 'got http-code ' . $httpcode . ' (forbidden)';
+            } elseif ($httpcode >= 500 && $httpcode <= 599) {
+                $statuscode = self::$IS_SERVERERROR;
+                $err = 'got http-code ' . $httpcode . ' (server error)';
+            } elseif ($httpcode != 200) {
+                $statuscode = self::$IS_HTTPERROR;
+                $err = 'got http-code ' . $httpcode . '(' . $this->HttpCode2Text($httpcode) . ')';
+            }
+        }
+        if ($statuscode == 0) {
+            $header_size = $curl_info['header_size'];
+            $head = substr($response, 0, $header_size);
+            $body = substr($response, $header_size);
+            $this->SendDebug(__FUNCTION__, ' => head=' . $head, 0);
+            $this->SendDebug(__FUNCTION__, ' => body=' . $body, 0);
+            $jbody = json_decode($body, true);
+            if ($jbody == false) {
+                $statuscode = self::$IS_INVALIDDATA;
+                $err = 'invalid/malformed data';
+            }
+        }
+        if ($statuscode == 0 && $httpcode == 403) {
+            if (isset($jbody['name']) && $jbody['name'] == 'INVALID_PIN') {
+                $statuscode = self::$IS_INVALIDPIN;
+                $err = 'invalid pin';
+            }
+        }
+        if ($statuscode == 0) {
+            if (isset($jbody['token']) == false) {
+                $statuscode = self::$IS_INVALIDDATA;
+                $err = '"token" missing';
+            }
+        }
+
+        $token = $jbody['token'];
+        $this->SendDebug(__FUNCTION__, ' => pin-token=' . $token, 0);
+
+        if (in_array($statuscode, [self::$IS_UNAUTHORIZED, self::$IS_INVALIDPIN])) {
+            $this->WriteAttributeString('ApiSettings', '');
+        }
+
+        $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
+        if ($collectApiCallStats) {
+            $this->ApiCallCollect($url, $err, $statuscode);
+        }
+
+        if ($statuscode) {
+            $this->SendDebug(__FUNCTION__, ' => response=' . $response, 0);
+            $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
+            $this->MaintainStatus($statuscode);
+            return false;
+        }
+
+        $this->SendDebug(__FUNCTION__, '*** deep refresh', 0);
+
+        $path = '/v1/accounts/' . $user_id . '/vehicles/' . $vin . '/ev';
+        $url = $this->build_url(self::$api_endpoint . $path, []);
+
+        $postfields = [
+            'command' => 'DEEPREFRESH',
+            'pinAuth' => $token,
+        ];
+        $postdata = json_encode($postfields);
+
+        $headerfields = [
+            'accept'               => 'application/json, text/plain, */*',
+            'accept-language'      => 'de-de',
+            'content-encoding'     => 'amz-1.0',
+            'content-type'         => 'application/json',
+            'host'                 => $this->extract_host(self::$api_endpoint),
+            'x-clientapp-version'  => '1.0',
+            'clientrequestid'      => $this->random_string(16),
+            'x-api-key'            => self::$api_key,
+            'x-originator-type'    => 'web',
+            'locale'               => 'de_de',
+            'x-clientapp-name'     => 'CWP',
+            'x-amz-security-token' => $credentials['SessionToken'],
+        ];
+        ksort($headerfields);
+
+        $awsv4 = new awsv4($credentials['AccessKeyId'], $credentials['SecretKey']);
+        $awsv4->setRegionName('eu-west-1');
+        $awsv4->setServiceName('execute-api');
+        $awsv4->setPath($path);
+        $awsv4->setPayload($postdata);
+        $awsv4->setRequestMethod('POST');
+        foreach ($headerfields as $key => $value) {
+            $awsv4->addHeader($key, $value);
+        }
+        $aws_headers = $awsv4->getHeaders();
+        $header = $this->build_header($aws_headers);
+
+        $curl_opts = [
+            CURLOPT_URL            => $url,
+            CURLOPT_HTTPHEADER     => $header,
+            CURLOPT_CUSTOMREQUEST  => 'POST',
+            CURLOPT_POSTFIELDS     => $postdata,
+            CURLOPT_COOKIEFILE     => '',
+            CURLOPT_HEADER         => true,
+            CURLINFO_HEADER_OUT    => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 30,
+        ];
+
+        $this->SendDebug(__FUNCTION__, 'http-POST, url=' . $url, 0);
+        $this->SendDebug(__FUNCTION__, '... header=' . print_r($header, true), 0);
+        $this->SendDebug(__FUNCTION__, '... postfields=' . print_r($postfields, true), 0);
+
+        $time_start = microtime(true);
+
+        $ch = curl_init();
+        curl_setopt_array($ch, $curl_opts);
+        $response = curl_exec($ch);
+        $cerrno = curl_errno($ch);
+        $cerror = $cerrno ? curl_error($ch) : '';
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_info = curl_getinfo($ch);
+        curl_close($ch);
+
+        $duration = round(microtime(true) - $time_start, 2);
+        $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
+
+        $statuscode = 0;
+        $err = '';
+        if ($cerrno) {
+            $statuscode = self::$IS_SERVERERROR;
+            $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
+        }
+        if ($statuscode == 0) {
+            if ($httpcode == 401) {
+                $statuscode = self::$IS_UNAUTHORIZED;
+                $err = 'got http-code ' . $httpcode . ' (unauthorized)';
+            } elseif ($httpcode == 403) {
+                $statuscode = self::$IS_UNAUTHORIZED;
+                $err = 'got http-code ' . $httpcode . ' (forbidden)';
+            } elseif ($httpcode >= 500 && $httpcode <= 599) {
+                $statuscode = self::$IS_SERVERERROR;
+                $err = 'got http-code ' . $httpcode . ' (server error)';
+            } elseif ($httpcode != 200) {
+                $statuscode = self::$IS_HTTPERROR;
+                $err = 'got http-code ' . $httpcode . '(' . $this->HttpCode2Text($httpcode) . ')';
+            }
+        }
+
+        if ($statuscode == 0) {
+            $header_size = $curl_info['header_size'];
+            $head = substr($response, 0, $header_size);
+            $body = substr($response, $header_size);
+            $this->SendDebug(__FUNCTION__, ' => head=' . $head, 0);
+            $this->SendDebug(__FUNCTION__, ' => body=' . $body, 0);
+            $jbody = json_decode($body, true);
+            if ($jbody == false) {
+                $statuscode = self::$IS_INVALIDDATA;
+                $err = 'invalid/malformed data';
+            }
+        }
+        if ($statuscode == 0) {
+            if (isset($jbody['name']) && $jbody['name'] == 'EXPIRED_TOKEN') {
+                $statuscode = self::$IS_UNAUTHORIZED;
+                $err = 'token expired';
+            }
+        }
+        if ($statuscode == 0 && $httpcode == 403) {
+            if (isset($jbody['name']) && $jbody['name'] == 'FORBIDDEN') {
+                $statuscode = 0;
+                $this->SendDebug(__FUNCTION__, ' => ' . (isset($jbody['debugMsg']) ? $jbody['debugMsg'] : $jbody['name']), 0);
+            }
+        }
+
+        if ($statuscode == self::$IS_UNAUTHORIZED) {
+            $this->WriteAttributeString('ApiSettings', '');
+        }
+
+        $collectApiCallStats = $this->ReadPropertyBoolean('collectApiCallStats');
+        if ($collectApiCallStats) {
+            $this->ApiCallCollect($url, $err, $statuscode);
+        }
+
+        if ($statuscode) {
+            $this->SendDebug(__FUNCTION__, ' => response=' . $response, 0);
+            $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
+            $this->MaintainStatus($statuscode);
+            return false;
+        }
+
+        $this->MaintainStatus(IS_ACTIVE);
+
+        $this->SendDebug(__FUNCTION__, 'data=' . print_r($jbody, true), 0);
+        $sec = 10;
+        $this->SendDebug(__FUNCTION__, '*** update status in ' . $sec . 's', 0);
+        $this->MaintainTimer('UpdateStatus', $sec * 1000);
     }
 }
