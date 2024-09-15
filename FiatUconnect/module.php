@@ -192,9 +192,10 @@ class FiatUconnect extends IPSModule
                     'caption' => 'Password'
                 ],
                 [
-                    'name'    => 'pin',
-                    'type'    => 'PasswordTextBox',
-                    'caption' => 'PIN'
+                    'name'     => 'pin',
+                    'type'     => 'PasswordTextBox',
+                    'validate' => '^([0-9]){4}$',
+                    'caption'  => 'PIN'
                 ],
                 [
                     'name'    => 'vin',
@@ -1245,9 +1246,14 @@ class FiatUconnect extends IPSModule
             return;
         }
 
+        $pin = $this->ReadPropertyString('pin');
+        if (preg_match('/^([0-9]){4}$/', $pin) == false) {
+            $this->SendDebug(__FUNCTION__, 'no valid pin configured', 0);
+            return;
+        }
+
         $user_id = $settings['user_id'];
         $vin = $this->ReadPropertyString('vin');
-        $pin = $this->ReadPropertyString('pin');
 
         $credentials = $settings['credentials'];
 
