@@ -26,6 +26,7 @@
 			"Current battery charge level (SoC)": "Aktueller Ladezustand der Batterie (SoC)",
 			"Charging status": "Status des Ladevorgangs",
 			"Plugin status": "Status der Ladekabels",
+			"Remaining charging time": "Verbleibende Ladedauer",
 			"Battery voltage": "Batteriespannung",
 			"Last status update from the EV system": "Letzte Status-Aktualisierung vom EV-System",
 			"Service in": "Service in",

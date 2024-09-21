@@ -131,6 +131,7 @@ class FiatUconnect extends IPSModule
         $this->MaintainVariable('StateOfCharge', $this->Translate('Current battery charge level (SoC)'), VARIABLETYPE_FLOAT, 'Fiat.StateOfCharge', $vpos++, true);
         $this->MaintainVariable('ChargingStatus', $this->Translate('Charging status'), VARIABLETYPE_STRING, 'Fiat.ChargingStatus', $vpos++, true);
         $this->MaintainVariable('PlugInStatus', $this->Translate('Plugin status'), VARIABLETYPE_INTEGER, 'Fiat.PlugInStatus', $vpos++, true);
+        $this->MaintainVariable('TimeToFullyCharge', $this->Translate('Remaining charging time'), VARIABLETYPE_INTEGER, 'Fiat.TimeToFullyCharge', $vpos++, true);
         $this->MaintainVariable('BatteryVoltage', $this->Translate('Battery voltage'), VARIABLETYPE_FLOAT, 'Fiat.Voltage', $vpos++, true);
         $this->MaintainVariable('LastEvStatusUpdate', $this->Translate('Last status update from the EV system'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, true);
 
@@ -1180,14 +1181,24 @@ class FiatUconnect extends IPSModule
             $val = $this->GetArrayElem($jdata, 'evInfo.battery.plugInStatus', '');
             $this->SaveValue('PlugInStatus', intval($val), $isChanged);
 
-            $val = $this->GetArrayElem($jdata, 'evInfo.battery.chargingLevel', ''); // LEVEL_2
-            $this->SendDebug(__FUNCTION__, 'battery.chargingLevel=' . $val, 0);
-
-            $val = $this->GetArrayElem($jdata, 'evInfo.battery.timeToFullyChargeL2', 0);
-            $this->SendDebug(__FUNCTION__, 'battery.timeToFullyChargeL2=' . $val, 0);
-
-            $val = $this->GetArrayElem($jdata, 'evInfo.battery.timeToFullyChargeL3', 0);
-            $this->SendDebug(__FUNCTION__, 'battery.timeToFullyChargeL3=' . $val, 0);
+            $chargingLevel = $this->GetArrayElem($jdata, 'evInfo.battery.chargingLevel', '');
+            switch ($chargingLevel) {
+                case 'LEVEL_2':
+                    $val = $this->GetArrayElem($jdata, 'evInfo.battery.timeToFullyChargeL2', 0);
+                    if ($val != '') {
+                        $this->SaveValue('TimeToFullyCharge', intval($val), $isChanged);
+                    }
+                    break;
+                case 'LEVEL_3':
+                    $val = $this->GetArrayElem($jdata, 'evInfo.battery.timeToFullyChargeL3', 0);
+                    if ($val != '') {
+                        $this->SaveValue('TimeToFullyCharge', intval($val), $isChanged);
+                    }
+                    break;
+                default:
+                    $this->SaveValue('TimeToFullyCharge', 0, $isChanged);
+                    break;
+            }
 
             $val = $this->GetArrayElem($jdata, 'evInfo.timestamp', '');
             if ($val != '') {

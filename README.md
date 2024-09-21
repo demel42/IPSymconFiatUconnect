@@ -102,7 +102,7 @@ Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und m
 
 ## 7. Versions-Historie
 
-- 1.7 @ 16.09.2024 09:10
+- 1.7 @ 21.09.2024 15:37
   - Änderung: manuelle Auslösung des sogenannten "Deep Refresh" (erzwungene Aktualisierung der Daten des EV-Systems)
   - update submodule CommonStubs
 
