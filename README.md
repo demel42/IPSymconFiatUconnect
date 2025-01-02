@@ -103,6 +103,7 @@ Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und m
 ## 7. Versions-Historie
 
 - 1.8 @ 02.01.2025 14:28
+  - Fix: Schreibfehler korrigiert
   - Fix: Link zur Dokumentation korrigiert
   - update submodule CommonStubs
 
