@@ -453,7 +453,7 @@ class FiatUconnect extends IPSModule
                 $err = 'got http-code ' . $httpcode . ' (server error)';
             } elseif ($httpcode != 200) {
                 $statuscode = self::$IS_HTTPERROR;
-                $err = 'got http-code ' . $httpcode . '(' . $this->HttpCode2Text($httpcode) . ')';
+                $err = 'got http-code ' . $httpcode . ' (' . $this->HttpCode2Text($httpcode) . ')';
             }
         }
         if ($statuscode == 0) {
@@ -563,7 +563,7 @@ class FiatUconnect extends IPSModule
                 $err = 'got http-code ' . $httpcode . ' (server error)';
             } elseif ($httpcode != 200) {
                 $statuscode = self::$IS_HTTPERROR;
-                $err = 'got http-code ' . $httpcode . '(' . $this->HttpCode2Text($httpcode) . ')';
+                $err = 'got http-code ' . $httpcode . ' (' . $this->HttpCode2Text($httpcode) . ')';
             }
         }
         if ($statuscode == 0) {
@@ -685,7 +685,7 @@ class FiatUconnect extends IPSModule
                 $err = 'got http-code ' . $httpcode . ' (server error)';
             } elseif ($httpcode != 200) {
                 $statuscode = self::$IS_HTTPERROR;
-                $err = 'got http-code ' . $httpcode . '(' . $this->HttpCode2Text($httpcode) . ')';
+                $err = 'got http-code ' . $httpcode . ' (' . $this->HttpCode2Text($httpcode) . ')';
             }
         }
         if ($statuscode == 0) {
@@ -793,7 +793,7 @@ class FiatUconnect extends IPSModule
                 $err = 'got http-code ' . $httpcode . ' (server error)';
             } elseif ($httpcode != 200) {
                 $statuscode = self::$IS_HTTPERROR;
-                $err = 'got http-code ' . $httpcode . '(' . $this->HttpCode2Text($httpcode) . ')';
+                $err = 'got http-code ' . $httpcode . ' (' . $this->HttpCode2Text($httpcode) . ')';
             }
         }
         if ($statuscode == 0) {
@@ -909,7 +909,7 @@ class FiatUconnect extends IPSModule
                 $err = 'got http-code ' . $httpcode . ' (server error)';
             } elseif ($httpcode != 200) {
                 $statuscode = self::$IS_HTTPERROR;
-                $err = 'got http-code ' . $httpcode . '(' . $this->HttpCode2Text($httpcode) . ')';
+                $err = 'got http-code ' . $httpcode . ' (' . $this->HttpCode2Text($httpcode) . ')';
             }
         }
         if ($statuscode == 0) {
@@ -1061,7 +1061,7 @@ class FiatUconnect extends IPSModule
                 $err = 'got http-code ' . $httpcode . ' (server error)';
             } elseif ($httpcode != 200) {
                 $statuscode = self::$IS_HTTPERROR;
-                $err = 'got http-code ' . $httpcode . '(' . $this->HttpCode2Text($httpcode) . ')';
+                $err = 'got http-code ' . $httpcode . ' (' . $this->HttpCode2Text($httpcode) . ')';
             }
         }
         if ($statuscode == 0) {
@@ -1354,7 +1354,7 @@ class FiatUconnect extends IPSModule
                 $err = 'got http-code ' . $httpcode . ' (server error)';
             } elseif ($httpcode != 200) {
                 $statuscode = self::$IS_HTTPERROR;
-                $err = 'got http-code ' . $httpcode . '(' . $this->HttpCode2Text($httpcode) . ')';
+                $err = 'got http-code ' . $httpcode . ' (' . $this->HttpCode2Text($httpcode) . ')';
             }
         }
         if ($statuscode == 0) {
@@ -1490,7 +1490,7 @@ class FiatUconnect extends IPSModule
                 $err = 'got http-code ' . $httpcode . ' (server error)';
             } elseif ($httpcode != 200) {
                 $statuscode = self::$IS_HTTPERROR;
-                $err = 'got http-code ' . $httpcode . '(' . $this->HttpCode2Text($httpcode) . ')';
+                $err = 'got http-code ' . $httpcode . ' (' . $this->HttpCode2Text($httpcode) . ')';
             }
         }
         if ($statuscode == 0) {

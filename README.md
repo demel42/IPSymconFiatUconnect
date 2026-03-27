@@ -102,6 +102,11 @@ Wichtiger Hinweis: das Profil _Fiat.ChargingStatus_ ist nicht vollständig und m
 
 ## 7. Versions-Historie
 
+- 1.9 @ 27.03.2026 09:23
+  - Fix: Anpassung für IPS 9
+  - interne Änderung
+  - update submodule CommonStubs
+
 - 1.8 @ 02.01.2025 14:28
   - Fix: Schreibfehler korrigiert
   - Fix: Link zur Dokumentation korrigiert
