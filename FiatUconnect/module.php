@@ -276,7 +276,7 @@ class FiatUconnect extends IPSModule
         return $formActions;
     }
 
-    private function SetUpdateInterval(int $min = null)
+    private function SetUpdateInterval(?int $min = null)
     {
         if (is_null($min)) {
             $min = $this->ReadAttributeString('external_update_interval');
@@ -287,7 +287,7 @@ class FiatUconnect extends IPSModule
         $this->MaintainTimer('UpdateStatus', $min * 60 * 1000);
     }
 
-    public function OverwriteUpdateInterval(int $min = null)
+    public function OverwriteUpdateInterval(?int $min = null)
     {
         if (is_null($min)) {
             $this->WriteAttributeString('external_update_interval', '');
@@ -431,7 +431,9 @@ class FiatUconnect extends IPSModule
         $cerror = $cerrno ? curl_error($ch) : '';
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curl_info = curl_getinfo($ch);
-        curl_close($ch);
+        if (IPS_GetKernelVersion() < 8.5) {
+            curl_close($ch);
+        }
 
         $duration = round(microtime(true) - $time_start, 2);
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
@@ -541,7 +543,9 @@ class FiatUconnect extends IPSModule
         $cerror = $cerrno ? curl_error($ch) : '';
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curl_info = curl_getinfo($ch);
-        curl_close($ch);
+        if (IPS_GetKernelVersion() < 8.5) {
+            curl_close($ch);
+        }
 
         $duration = round(microtime(true) - $time_start, 2);
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
@@ -663,7 +667,9 @@ class FiatUconnect extends IPSModule
         $cerror = $cerrno ? curl_error($ch) : '';
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curl_info = curl_getinfo($ch);
-        curl_close($ch);
+        if (IPS_GetKernelVersion() < 8.5) {
+            curl_close($ch);
+        }
 
         $duration = round(microtime(true) - $time_start, 2);
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
@@ -771,7 +777,9 @@ class FiatUconnect extends IPSModule
         $cerror = $cerrno ? curl_error($ch) : '';
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curl_info = curl_getinfo($ch);
-        curl_close($ch);
+        if (IPS_GetKernelVersion() < 8.5) {
+            curl_close($ch);
+        }
 
         $duration = round(microtime(true) - $time_start, 2);
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
@@ -887,7 +895,9 @@ class FiatUconnect extends IPSModule
         $cerror = $cerrno ? curl_error($ch) : '';
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curl_info = curl_getinfo($ch);
-        curl_close($ch);
+        if (IPS_GetKernelVersion() < 8.5) {
+            curl_close($ch);
+        }
 
         $duration = round(microtime(true) - $time_start, 2);
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
@@ -1039,7 +1049,9 @@ class FiatUconnect extends IPSModule
         $cerror = $cerrno ? curl_error($ch) : '';
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curl_info = curl_getinfo($ch);
-        curl_close($ch);
+        if (IPS_GetKernelVersion() < 8.5) {
+            curl_close($ch);
+        }
 
         $duration = round(microtime(true) - $time_start, 2);
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
@@ -1321,7 +1333,9 @@ class FiatUconnect extends IPSModule
         $cerror = $cerrno ? curl_error($ch) : '';
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curl_info = curl_getinfo($ch);
-        curl_close($ch);
+        if (IPS_GetKernelVersion() < 8.5) {
+            curl_close($ch);
+        }
 
         $duration = round(microtime(true) - $time_start, 2);
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);
@@ -1454,7 +1468,9 @@ class FiatUconnect extends IPSModule
         $cerror = $cerrno ? curl_error($ch) : '';
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curl_info = curl_getinfo($ch);
-        curl_close($ch);
+        if (IPS_GetKernelVersion() < 8.5) {
+            curl_close($ch);
+        }
 
         $duration = round(microtime(true) - $time_start, 2);
         $this->SendDebug(__FUNCTION__, ' => errno=' . $cerrno . ', httpcode=' . $httpcode . ', duration=' . $duration . 's', 0);

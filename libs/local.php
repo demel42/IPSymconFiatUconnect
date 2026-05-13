@@ -65,14 +65,14 @@ trait FiatUconnectLocalLib
         ];
         $this->CreateVarProfile('Fiat.PlugInStatus', VARIABLETYPE_INTEGER, '', 0, 0, 0, 0, '', $associations, $reInstall);
 
-        $this->CreateVarProfile('Fiat.Mileage', VARIABLETYPE_INTEGER, ' km', 0, 0, 0, 0, 'Distance', '', $reInstall);
-        $this->CreateVarProfile('Fiat.TimeToFullyCharge', VARIABLETYPE_INTEGER, ' min', 0, 0, 0, 0, 'Clock', '', $reInstall);
+        $this->CreateVarProfile('Fiat.Mileage', VARIABLETYPE_INTEGER, ' km', 0, 0, 0, 0, 'Distance', [], $reInstall);
+        $this->CreateVarProfile('Fiat.TimeToFullyCharge', VARIABLETYPE_INTEGER, ' min', 0, 0, 0, 0, 'Clock', [], $reInstall);
 
-        $this->CreateVarProfile('Fiat.StateOfCharge', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, '', '', $reInstall);
-        $this->CreateVarProfile('Fiat.BatteryCapacity', VARIABLETYPE_FLOAT, ' kWh', 0, 0, 0, 1, '', '', $reInstall);
-        $this->CreateVarProfile('Fiat.Voltage', VARIABLETYPE_FLOAT, ' V', 0, 0, 0, 1, '', '', $reInstall);
-        $this->CreateVarProfile('Fiat.Location', VARIABLETYPE_FLOAT, ' °', 0, 0, 0, 5, 'Car', '', $reInstall);
-        $this->CreateVarProfile('Fiat.Altitude', VARIABLETYPE_FLOAT, ' m', 0, 0, 0, 0, 'Car', '', $reInstall);
+        $this->CreateVarProfile('Fiat.StateOfCharge', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, '', [], $reInstall);
+        $this->CreateVarProfile('Fiat.BatteryCapacity', VARIABLETYPE_FLOAT, ' kWh', 0, 0, 0, 1, '', [], $reInstall);
+        $this->CreateVarProfile('Fiat.Voltage', VARIABLETYPE_FLOAT, ' V', 0, 0, 0, 1, '', [], $reInstall);
+        $this->CreateVarProfile('Fiat.Location', VARIABLETYPE_FLOAT, ' °', 0, 0, 0, 5, 'Car', [], $reInstall);
+        $this->CreateVarProfile('Fiat.Altitude', VARIABLETYPE_FLOAT, ' m', 0, 0, 0, 0, 'Car', [], $reInstall);
 
         $associations = [
             ['Wert' => 'NOT_CHARGING', 'Name' => $this->Translate('Not charging'), 'Farbe' => -1],
